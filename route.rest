@@ -1,0 +1,10 @@
+POST http://localhost:5000/api/products/
+
+{
+    "name": "dan",
+        "category": "cat",
+        "quantity": "2",
+        "price": "1",
+        "description": "wec",
+        "image": "fileData"
+}
