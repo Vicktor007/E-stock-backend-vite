@@ -63,14 +63,14 @@ const productSchema = mongoose.Schema({
         production_date: {
             type: String,
             default: "Not a perishable product",
-        required: [true, "Please add production date"],
+        required: false,
         
         trim: true
         },
         expiry_date: {
             type: String,
             default: "Not a perishable product",
-        required: [true, "Please add expiry date"],
+        required: false,
         trim: true
         }
     
