@@ -7,13 +7,16 @@ const cloudinary = require("cloudinary").v2;
 
 // create product
 const createProduct = asyncHandler(async(req, res) =>{
-  const {name, sku, category, quantity, price, description, production_date, expiry_date} = req.body
+  const {name, sku, category, quantity, price, description, images, production_date, expiry_date} = req.body
+
+  
 
   // validation
   if(!name || !category || !quantity || !price || !description) {
       res.status(400)
       throw new Error("Please fill in all fields")
   }
+
 
   let fileData = {}
   if(req.file) {
@@ -25,11 +28,15 @@ const createProduct = asyncHandler(async(req, res) =>{
           public_id: req.file.filename, // use filename as public_id
       }
   }
+  const parsedImages = JSON.parse(images);
 
-  // create product
-  const product = await Product.create({
-      user: req.user.id,
-      name,
+
+
+  try {
+    // create product
+    const product = await Product.create({
+    user: req.user.id,
+    name,
       sku,
       category,
       quantity,
@@ -37,9 +44,17 @@ const createProduct = asyncHandler(async(req, res) =>{
       description,
       production_date,
       expiry_date,
+      images: parsedImages,
       image: fileData
-  })
-  res.status(201).json(product);
+})
+
+res.status(201).json(product);
+
+  }
+  catch(error) {
+    res.status(400).json(error.message);
+    
+  }
 });
 
 // get all products
@@ -121,7 +136,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 // Update Product
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, category, quantity, price, description, production_date, expiry_date } = req.body;
+  const { name, category, quantity, price, description, images, production_date, expiry_date } = req.body;
   const { id } = req.params;
 
   const product = await Product.findById(id);
@@ -159,7 +174,13 @@ const updateProduct = asyncHandler(async (req, res) => {
       public_id: req.file.filename, // use filename as public_id
     };
   }
+  const parsedImages = JSON.parse(images);
 
+  const existingImages = product.images;
+
+  const allImages = existingImages.concat(parsedImages);
+
+  
   // Update Product
   const updatedProduct = await Product.findByIdAndUpdate(
     { _id: id },
@@ -172,6 +193,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       production_date,
       expiry_date,
       image: Object.keys(fileData).length === 0 ? product?.image : fileData,
+      images: allImages,
     },
     {
       new: true,
@@ -182,6 +204,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   res.status(200).json(updatedProduct);
 });
 ;
+
 
   
 

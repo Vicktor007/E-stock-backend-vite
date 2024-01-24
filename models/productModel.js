@@ -60,6 +60,13 @@ const productSchema = mongoose.Schema({
         }
     },
     
+
+    images: [{
+        public_id: String,
+        url: String
+      }],
+      
+
         production_date: {
             type: String,
             default: "",

@@ -6,6 +6,7 @@ const cors = require("cors");
 const userRoute = require("./routes/userRoute.js");
 const productRoute = require("./routes/productRoute");
 const contactRoute = require("./routes/contactRoute");
+const imageRoute = require("./routes/imageRoutes.js");
 const errorHandler = require("./middlewares/errorMiddleware"); 
 const cookieParser = require("cookie-parser");
 const path = require("path")
@@ -29,7 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 app.use("/api/users", userRoute)
 app.use("/api/products", productRoute)
 app.use("/api/contactus", contactRoute)
-
+app.use("/api/images", imageRoute)
 
 
 // Routes
